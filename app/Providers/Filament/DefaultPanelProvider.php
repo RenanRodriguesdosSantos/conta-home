@@ -9,6 +9,8 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -53,5 +55,17 @@ class DefaultPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+    }
+
+    public function boot(): void
+    {
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::STYLES_BEFORE,
+            fn () => <<<'BLADE'
+                <link rel="apple-touch-icon" href="apple-touch-icon-180x180.png" sizes="180x180">
+                <link rel="mask-icon" href="maskable-icon-512x512.png" color="#FFFFFF">
+                <link rel="manifest" href="build/manifest.webmanifest" />
+            BLADE ,
+        );
     }
 }
