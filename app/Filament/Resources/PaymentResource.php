@@ -36,6 +36,8 @@ class PaymentResource extends Resource
                     ->label('Criado por'),
                 TextColumn::make('user.name')
                     ->label('Pagador'),
+                TextColumn::make('expense.description')
+                    ->label('Descrição'),
                 TextColumn::make('value')
                     ->formatStateUsing(fn($state)  => "R$ " . number_format($state, 2, ',', '.'))
                     ->label('Valor'),
