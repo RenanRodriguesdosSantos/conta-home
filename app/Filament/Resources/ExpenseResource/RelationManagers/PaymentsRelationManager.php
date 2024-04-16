@@ -36,7 +36,7 @@ class PaymentsRelationManager extends RelationManager
             ->headerActions([])
             ->actions([
                 Tables\Actions\Action::make('alter_status')
-                    ->label('Alterar Status')
+                    ->label('Alterar status')
                     ->form([
                         Select::make('status')
                             ->options(PaymentStatus::class)
@@ -65,9 +65,10 @@ class PaymentsRelationManager extends RelationManager
                                 ->title('Status alterado com sucesso!')
                                 ->success()
                                 ->send();
-                    }),
+                    })
+                    ->hidden(fn ($record) => $record->expense->user_id != auth()->id()),
             ])
-            ->bulkActions([
-            ]);
+            ->recordAction('alter_status')
+            ->bulkActions([]);
     }
 }
