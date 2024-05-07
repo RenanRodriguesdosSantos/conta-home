@@ -14,11 +14,15 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
+use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\BaseFilter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\HtmlString;
 
 class PaymentResource extends Resource
 {
@@ -98,7 +102,18 @@ class PaymentResource extends Resource
                     ->hidden(fn ($record) => $record->expense->user_id != auth()->id()),
             ])
             ->recordAction('alter_status')
-            ->bulkActions([])
+            ->bulkActions([
+                BulkAction::make('sum_payments')
+                    ->label('Soma de pagamentos')
+                    ->modalContent(function (Collection $records) {
+                        $total = $records->sum('value');
+
+                        return new HtmlString("TOTAL: R$ " . number_format($total, 2, ',', '.'));
+                    })
+                    ->modalWidth(MaxWidth::Large)
+                    ->modalSubmitAction(false)
+
+            ])
             ->defaultSort('id', 'desc');
     }
 
