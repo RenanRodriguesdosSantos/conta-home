@@ -36,7 +36,7 @@ class ExpensesChart extends ChartWidget
         $data = Trend::query(Expense::query())
             ->between($firstDay, $lastDay)
             ->perMonth()
-            ->count();
+            ->sum('total');
 
         return [
             'datasets' => [
